@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+{% block title %}Sign Up{% endblock %}
+
+{% block content %}
+    <div class="mask d-flex align-items-center h-100">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-xl-5 col-md-8">
+                    <form class="bg-white rounded p-5 shadow" method="POST">
+                        {% csrf_token %}
+                        <h1 class="h1">Sign Up</h1>
+
+                        {% if form.errors %}
+                            <div class="alert alert-danger">
+                                {# Show errors as a neat html list, and remove the __all__ #}
+
+                                {% for error in form.non_field_errors %}
+                                    {{ error }}
+                                {% endfor %}
+
+                            </div>
+                        {% endif %}
+
+                        {% for field in form %}
+                            {% if field.name != "remember_me" %}
+                                <label for="{{ field.name }}" class="form-label">{{ field.label_tag }}</label>
+                                {{ field|add_class:"form-control" }}
+                            {% endif %}
+                        {% endfor %}
+
+                        <div class="mt-4">
+                            <!-- Submit button -->
+                            <button type="submit" class="btn btn-primary btn-block">Sign Up</button>
+                            <a href="{% url 'login' %}" class="btn btn-secondary btn-block">Log In</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
