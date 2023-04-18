@@ -41,6 +41,5 @@ urlpatterns = [
     path("groups/edit/<int:pk>/", groups_edit, name="groups_edit")
 ]
 
-# Only add this when we are in debug mode.
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

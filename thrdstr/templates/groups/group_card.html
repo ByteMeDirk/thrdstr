@@ -3,14 +3,19 @@
         <div class="card-body">
             <div class="row">
                 <div class="col-2">
-                    <img src="/media/{{ group.banner }}" class="card-img-top rounded-circle"
-                         alt="Group banner for {{ group.name }}">
+                    {% if group.banner %}
+                        <img src="/media/{{ group.banner }}" class="card-img-top rounded-circle"
+                             alt="Group banner for {{ group.name }}">
+                    {% else %}
+                        <img src="/media/group_banners/default.jpg" alt="Group Banner"
+                             class="img-fluid rounded-circle">
+                    {% endif %}
                 </div>
                 <div class="col-10">
                     <h5 class="card-title">{{ group.name }}</h5>
                     <p class="card-text">{{ group.description }}</p>
                     {% if group.owner_id == user.id %}
-                        <a href="{% url "groups_edit" group.id%}" class="btn btn-dark">Edit</a>
+                        <a href="{% url "groups_edit" group.id %}" class="btn btn-dark">Edit</a>
                     {% else %}
                         {{ group.owner }}
                     {% endif %}
