@@ -16,23 +16,18 @@
                                 {% for error in form.non_field_errors %}
                                     {{ error }}
                                 {% endfor %}
-
                             </div>
                         {% endif %}
 
                         {% for field in form %}
                             {% if field.name == 'avatar' %}
-                                {% if form.avatar.value %}
-                                    <img src="{{ user.avatar.url }}" class="card-img-top image-responsive rounded-circle"
-                                         alt="Avatar for {{ user.username }}">
-                                {% else %}
-                                    <img src="/media/avatars/default.jpg" class="card-img-top image-responsive rounded-circle"
-                                         alt="Avatar for {{ user.username }}">
-                                {% endif %}
+                                <img src="{{ user.avatar.url }}"
+                                     class="card-img-top image-responsive rounded-circle"
+                                     alt="Avatar for {{ user.username }}">
                                 {{ field|add_class:"form-control mb-2" }}
                             {% else %}
-                            <label for="{{ field.name }}" class="form-label">{{ field.label_tag }}</label>
-                            {{ field|add_class:"form-control" }}
+                                <label for="{{ field.name }}" class="form-label">{{ field.label_tag }}</label>
+                                {{ field|add_class:"form-control" }}
                             {% endif %}
                         {% endfor %}
 

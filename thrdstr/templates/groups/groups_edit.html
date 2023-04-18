@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load widget_tweaks %}
-{% block title %}Create Group{% endblock %}
+{% block title %}Edit Group{% endblock %}
 
 {% block content %}
     <div class="mask d-flex align-items-center h-100">
@@ -16,7 +16,6 @@
                                 {% for error in form.non_field_errors %}
                                     {{ error }}
                                 {% endfor %}
-
                             </div>
                         {% endif %}
 
@@ -32,7 +31,7 @@
                         {% endfor %}
 
                         <div class="mt-4">
-                            <button type="submit" class="btn btn-dark btn-block">Create</button>
+                            <button type="submit" class="btn btn-dark btn-block">Update</button>
                         </div>
                     </form>
                 </div>

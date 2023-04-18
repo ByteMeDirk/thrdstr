@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views.generic import CreateView
 
-from .forms import UserSignupForm, UserEditForm, GroupCreateForm
+from .forms import UserSignupForm, UserEditForm, GroupCreateForm, GroupEditForm
 from .models import Group
 
 # Root Views    ---------------------------------------------------------------
@@ -66,3 +66,20 @@ def groups_create(request):
     else:
         form = GroupCreateForm()
     return render(request, "groups/groups_create.html", {"form": form})
+
+
+@login_required
+def groups_edit(request, pk):
+    """
+    Users can edit their groups.
+    """
+    group = Group.objects.get(id=pk)
+    print(group)
+    if request.method == "POST":
+        form = GroupEditForm(request.POST, request.FILES, instance=group)
+        if form.is_valid():
+            form.save()
+            return redirect("groups")
+    else:
+        form = GroupEditForm(instance=group)
+    return render(request, "groups/groups_edit.html", {"form": form})

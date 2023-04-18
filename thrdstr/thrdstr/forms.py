@@ -48,3 +48,15 @@ class GroupCreateForm(forms.ModelForm):
     class Meta:
         model = Group
         fields = ("name", "banner", "description")
+
+
+class GroupEditForm(forms.ModelForm):
+    """
+    A form that allows a user to edit a group.
+    """
+    banner = forms.ImageField(required=False)
+    description = forms.CharField(max_length=500, required=False)
+
+    class Meta:
+        model = Group
+        fields = ("banner", "description")

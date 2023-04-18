@@ -19,7 +19,7 @@ from django.contrib import admin
 from django.urls import path, include
 
 from . import settings
-from .views import index, SignupView, edit_profile_view, groups, groups_create
+from .views import index, SignupView, edit_profile_view, groups, groups_create, groups_edit
 
 admin.autodiscover()
 
@@ -37,7 +37,8 @@ urlpatterns = [
 
     # Groups URLs
     path("groups/", groups, name="groups"),
-    path("groups/create/", groups_create, name="groups_create")
+    path("groups/create/", groups_create, name="groups_create"),
+    path("groups/edit/<int:pk>/", groups_edit, name="groups_edit")
 ]
 
 # Only add this when we are in debug mode.

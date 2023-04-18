@@ -7,7 +7,7 @@ class User(AbstractUser, PermissionsMixin):
     User model that extends and modifies the BaseUserManager.
     """
     username = models.CharField(max_length=100, unique=True)
-    avatar = models.ImageField(upload_to="avatars", null=True, blank=True)
+    avatar = models.ImageField(upload_to="avatars", null=True, blank=True, default="avatars/default.jpg")
     first_name = models.CharField(max_length=100, null=True, blank=True)
     last_name = models.CharField(max_length=100, null=True, blank=True)
     email = models.EmailField(max_length=100, unique=True)
