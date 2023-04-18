@@ -1,8 +1,5 @@
-import os
-
 from django.contrib.auth.decorators import login_required
-from django.core.files import File
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views.generic import CreateView
 
@@ -99,3 +96,12 @@ def groups_edit(request, pk):
     else:
         form = GroupEditForm(instance=group)
     return render(request, "groups/groups_edit.html", {"form": form})
+
+
+@login_required
+def groups_delete(request, pk):
+    group = Group.objects.get(pk=pk)
+    if request.method == "POST":
+        group.delete()
+
+    return redirect("groups")

@@ -47,7 +47,7 @@ class GroupCreateForm(forms.ModelForm):
 
     class Meta:
         model = Group
-        fields = ("name", "banner", "description")
+        fields = ("banner", "name", "description")
 
 
 class GroupEditForm(forms.ModelForm):

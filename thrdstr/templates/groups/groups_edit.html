@@ -3,7 +3,7 @@
 {% block title %}Edit Group{% endblock %}
 
 {% block content %}
-    <div class="mask d-flex align-items-center h-100">
+     <div class="mask d-flex align-items-center h-100">
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-xl-5 col-md-8">
@@ -13,20 +13,23 @@
 
                         {% if form.errors %}
                             <div class="alert alert-danger">
-                                {{ form.errors }}
+                                {% for error in form.non_field_errors %}
+                                    {{ error }}
+                                {% endfor %}
+
                             </div>
                         {% endif %}
 
                         {% for field in form %}
                             {% if field.name == 'banner' %}
-                                {% if form.instance.banner %}
+                                {% if form.instance.banner.url %}
                                     <img src="{{ form.instance.banner.url }}" alt="Group Banner"
                                          class="img-fluid rounded-circle">
                                 {% else %}
                                     <img src="/media/group_banners/default.jpg" alt="Group Banner"
                                          class="img-fluid rounded-circle">
                                 {% endif %}
-                                {{ field|add_class:"form-control" }}
+                                {{ field|add_class:"form-control mb-2" }}
                             {% else %}
                                 <label for="{{ field.name }}" class="form-label">{{ field.label_tag }}</label>
                                 {{ field|add_class:"form-control" }}
