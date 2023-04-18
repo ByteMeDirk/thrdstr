@@ -3,8 +3,8 @@ from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views.generic import CreateView
 
-from .forms import UserSignupForm, UserEditForm
-
+from .forms import UserSignupForm, UserEditForm, GroupCreateForm
+from .models import Group
 
 # Root Views    ---------------------------------------------------------------
 def index(request):
@@ -40,3 +40,29 @@ def edit_profile_view(request):
     else:
         form = UserEditForm(instance=request.user)
     return render(request, "registration/profile.html", {"form": form})
+
+
+# Groups Views    ---------------------------------------------------------------
+def groups(request):
+    """
+    List all groups and subscribe or unsubscribe to groups.
+    """
+    groups = Group.objects.all()
+    return render(request, "groups.html", {"groups": groups})
+
+
+@login_required
+def groups_create(request):
+    """
+    Users can create and delete groups.
+    """
+    if request.method == "POST":
+        form = GroupCreateForm(request.POST, request.FILES)
+        if form.is_valid():
+            group = form.save(commit=False)
+            group.owner_id = request.user.id
+            group.save()
+            return redirect("groups")
+    else:
+        form = GroupCreateForm()
+    return render(request, "groups/groups_create.html", {"form": form})

@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+{% block title %}Profile{% endblock %}
+
+{% block content %}
+    <div class="mask d-flex align-items-center h-100">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-xl-5 col-md-8">
+                    <form class="bg-white rounded p-5 shadow" method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <h1 class="h1">Create Group</h1>
+
+                        {% if form.errors %}
+                            <div class="alert alert-danger">
+                                {% for error in form.non_field_errors %}
+                                    {{ error }}
+                                {% endfor %}
+
+                            </div>
+                        {% endif %}
+
+                        {% for field in form %}
+                            {% if field.name == 'banner' %}
+                                {% if form.banner.value %}
+                                    <img src="{{ user.banner.url }}" class="card-img-top image-responsive rounded-circle"
+                                         alt="banner for {{ user.username }}">
+                                {% else %}
+                                    <img src="/media/group_banners/default.jpg" class="card-img-top image-responsive rounded-circle"
+                                         alt="banner for {{ user.username }}">
+                                {% endif %}
+                                {{ field|add_class:"form-control mb-2" }}
+                            {% else %}
+                            <label for="{{ field.name }}" class="form-label">{{ field.label_tag }}</label>
+                            {{ field|add_class:"form-control" }}
+                            {% endif %}
+                        {% endfor %}
+
+                        <div class="mt-4">
+                            <button type="submit" class="btn btn-dark btn-block">Create</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

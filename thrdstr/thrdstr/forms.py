@@ -1,8 +1,7 @@
-from PIL import Image
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 
-from .models import User
+from .models import User, Group
 
 
 # User Forms ------------------------------------------------------------------
@@ -36,3 +35,16 @@ class UserEditForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ("avatar", "bio", "date_of_birth", "first_name", "last_name")
+
+
+# Group Forms -----------------------------------------------------------------
+class GroupCreateForm(forms.ModelForm):
+    """
+    A form that allows a user to create a group.
+    """
+    banner = forms.ImageField(required=False)
+    description = forms.CharField(max_length=500, required=False)
+
+    class Meta:
+        model = Group
+        fields = ("name", "banner", "description")

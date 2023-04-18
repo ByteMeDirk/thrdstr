@@ -19,7 +19,7 @@ from django.contrib import admin
 from django.urls import path, include
 
 from . import settings
-from .views import index, SignupView, edit_profile_view
+from .views import index, SignupView, edit_profile_view, groups, groups_create
 
 admin.autodiscover()
 
@@ -34,6 +34,10 @@ urlpatterns = [
     ),  # This is for the login and logout views
     path("accounts/signup/", SignupView.as_view(), name="signup"),
     path("accounts/profile/", edit_profile_view, name="profile"),
+
+    # Groups URLs
+    path("groups/", groups, name="groups"),
+    path("groups/create/", groups_create, name="groups_create")
 ]
 
 # Only add this when we are in debug mode.
