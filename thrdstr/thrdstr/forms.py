@@ -1,3 +1,4 @@
+from PIL import Image
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 
@@ -17,3 +18,21 @@ class UserSignupForm(UserCreationForm):
     class Meta:
         model = User
         fields = ("username", "email", "date_of_birth", "password1", "password2")
+
+
+class UserEditForm(forms.ModelForm):
+    """
+    A form that allows a user to edit their profile.
+    """
+    avatar = forms.ImageField(required=False)
+    bio = forms.CharField(max_length=500, required=False)
+    date_of_birth = forms.DateField(
+        required=True,
+        widget=forms.DateInput(attrs={"type": "date", "placeholder": "YYYY-MM-DD"}),
+    )
+    first_name = forms.CharField(max_length=30, required=True)
+    last_name = forms.CharField(max_length=30, required=True)
+
+    class Meta:
+        model = User
+        fields = ("avatar", "bio", "date_of_birth", "first_name", "last_name")

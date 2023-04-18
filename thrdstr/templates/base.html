@@ -14,11 +14,32 @@
 <body>
 <!-- Bootstrap JS -->
 <script src="{% static 'js/bootstrap.bundle.js' %}"></script>
+<script src="{% static 'js/custom.js' %}"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js"
         integrity="sha384-zYPOMqeu1DAVkHiLqWBUTcbYfZ8osu1Nd6Z89ify25QV9guujx43ITvfi12/QExE"
         crossorigin="anonymous"></script>
-<div class="container mt-3">
+
+{% include "navigation/navbar.html" %}
+<div class="container mt-2">
     {% block content %} {% endblock %}
 </div>
+
+<script>
+    const links = document.querySelectorAll("#random-color-link");
+
+    links.forEach(link => {
+        link.addEventListener("mouseover", () => {
+            // generate a random color
+            const randomColor = Math.floor(Math.random() * 16777215).toString(16);
+            // apply the color to the link text
+            link.style.color = "#" + randomColor;
+        });
+
+        link.addEventListener("mouseout", () => {
+            // reset the color to its default value
+            link.style.color = "";
+        });
+    });
+</script>
 </body>
 </html>

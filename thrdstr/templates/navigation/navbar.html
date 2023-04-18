@@ -1,0 +1,62 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="{% url "index" %}">thrdstr.</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo02"
+                aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a id="random-color-link" class="nav-link" aria-current="page" href="#"><i
+                            class="bi bi-chat-dots-fill"></i> Threads</a>
+                </li>
+                <li class="nav-item">
+                    <a id="random-color-link" class="nav-link" aria-current="page" href="#"><i
+                            class="bi bi-collection-fill"></i> Groups</a>
+                </li>
+                <li class="nav-item">
+                    <a id="random-color-link" class="nav-link" aria-current="page" href="#"><i
+                            class="bi bi-compass-fill"></i>
+                        Explore</a>
+                </li>
+            </ul>
+            <div class="d-flex">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    {% if user.is_authenticated %}
+                        {% if user.is_staff %}
+                            <li class="nav-item">
+                                <a id="random-color-link" class="nav-link" href="{% url 'admin:index' %}"><i
+                                        class="bi bi-sliders"></i> Admin</a>
+                            </li>
+                        {% endif %}
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                               data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-gear-fill"></i> {{ user.username }}
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <li><a id="random-color-link" class="dropdown-item" href="{% url "profile" %}">Profile</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item">
+                            <a id="random-color-link" class="nav-link" aria-current="page" href="{% url 'logout' %}"><i
+                                    class="bi bi-box-arrow-left"></i> Log Out</a>
+                        </li>
+
+                    {% else %}
+                        <li class="nav-item">
+                            <a id="random-color-link" class="nav-link" aria-current="page" href="{% url 'login' %}"><i
+                                    class="bi bi-box-arrow-right"></i> Log In</a>
+                        </li>
+                        <li class="nav-item">
+                            <a id="random-color-link" class="nav-link" aria-current="page" href="{% url 'signup' %}"><i
+                                    class="bi bi-person-plus-fill"></i> Sign Up</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</nav>
+
