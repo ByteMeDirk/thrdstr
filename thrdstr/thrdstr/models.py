@@ -1,3 +1,5 @@
+import datetime
+
 from django.contrib.auth.models import AbstractUser, PermissionsMixin
 from django.db import models
 
@@ -16,6 +18,7 @@ class User(AbstractUser, PermissionsMixin):
     email = models.EmailField(max_length=100, unique=True)
     date_of_birth = models.DateField(null=True, blank=True)
     bio = models.CharField(max_length=500, null=True, blank=True)
+    date_joined = models.DateTimeField(default=datetime.datetime.now)
 
 
 class Group(models.Model):
@@ -41,3 +44,4 @@ class Group(models.Model):
         null=True,
         blank=True,
     )
+    date_created = models.DateTimeField(default=datetime.datetime.now)

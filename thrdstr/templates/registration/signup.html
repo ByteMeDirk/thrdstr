@@ -14,11 +14,8 @@
                         {% if form.errors %}
                             <div class="alert alert-danger">
                                 {# Show errors as a neat html list, and remove the __all__ #}
-
-                                {% for error in form.non_field_errors %}
-                                    {{ error }}
-                                {% endfor %}
-
+                                {{ form.errors|striptags|escape|linebreaksbr|safe }}
+                                {{ form.non_field_errors|striptags|escape|linebreaksbr|safe }}
                             </div>
                         {% endif %}
 

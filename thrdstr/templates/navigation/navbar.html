@@ -7,19 +7,21 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item">
-                    <a id="random-color-link" class="nav-link" aria-current="page" href="#"><i
-                            class="bi bi-chat-dots-fill"></i> Threads</a>
-                </li>
-                <li class="nav-item">
-                    <a id="random-color-link" class="nav-link" aria-current="page" href="{% url  "groups" %}"><i
-                            class="bi bi-collection-fill"></i> Groups</a>
-                </li>
-                <li class="nav-item">
-                    <a id="random-color-link" class="nav-link" aria-current="page" href="#"><i
-                            class="bi bi-compass-fill"></i>
-                        Explore</a>
-                </li>
+                {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <a id="random-color-link" class="nav-link" aria-current="page" href="#"><i
+                                class="bi bi-chat-dots-fill"></i> Threads</a>
+                    </li>
+                    <li class="nav-item">
+                        <a id="random-color-link" class="nav-link" aria-current="page" href="{% url  "groups" %}"><i
+                                class="bi bi-collection-fill"></i> Groups</a>
+                    </li>
+                    <li class="nav-item">
+                        <a id="random-color-link" class="nav-link" aria-current="page" href="#"><i
+                                class="bi bi-compass-fill"></i>
+                            Explore</a>
+                    </li>
+                {% endif %}
             </ul>
             <div class="d-flex">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
@@ -44,8 +46,9 @@
                                     <a id="random-color-link" class="dropdown-item" href="{% url "groups_create" %}">Create
                                         Group</a>
                                 </li>
-                                 <li>
-                                    <a id="random-color-link" class="dropdown-item" href="{% url "groups_user" %}">My Groups</a>
+                                <li>
+                                    <a id="random-color-link" class="dropdown-item" href="{% url "groups_user" %}">My
+                                        Groups</a>
                                 </li>
                             </ul>
                         </li>
