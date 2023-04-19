@@ -3,7 +3,7 @@
 {% block title %}Edit Group{% endblock %}
 
 {% block content %}
-     <div class="mask d-flex align-items-center h-100">
+    <div class="mask d-flex align-items-center h-100">
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-xl-5 col-md-8">
@@ -38,6 +38,9 @@
 
                         <div class="mt-4">
                             <button type="submit" class="btn btn-dark btn-block">Update</button>
+                            <button type="button" onclick="history.go(-1);" class="btn btn-outline-secondary btn-block">
+                                Cancel
+                            </button>
                         </div>
                     </form>
                 </div>

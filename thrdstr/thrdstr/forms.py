@@ -9,6 +9,7 @@ class UserSignupForm(UserCreationForm):
     """
     A form that handles the sign up process.
     """
+
     date_of_birth = forms.DateField(
         required=True,
         widget=forms.DateInput(attrs={"type": "date", "placeholder": "YYYY-MM-DD"}),
@@ -23,6 +24,7 @@ class UserEditForm(forms.ModelForm):
     """
     A form that allows a user to edit their profile.
     """
+
     avatar = forms.ImageField(required=False)
     bio = forms.CharField(max_length=500, required=False)
     date_of_birth = forms.DateField(
@@ -42,6 +44,7 @@ class GroupCreateForm(forms.ModelForm):
     """
     A form that allows a user to create a group.
     """
+
     banner = forms.ImageField(required=False)
     description = forms.CharField(max_length=500, required=False)
 
@@ -54,6 +57,7 @@ class GroupEditForm(forms.ModelForm):
     """
     A form that allows a user to edit a group.
     """
+
     banner = forms.ImageField(required=False)
     description = forms.CharField(max_length=500, required=False)
 

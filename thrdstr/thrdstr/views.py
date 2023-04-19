@@ -17,6 +17,7 @@ def index(request):
 
 # User Views    ---------------------------------------------------------------
 
+
 class SignupView(CreateView):
     """
     A view that handles the sign up process.
@@ -39,13 +40,13 @@ def edit_profile_view(request):
             form = form.save(commit=False)
 
             # Check if avatar has been cleared
-            if 'avatar-clear' in request.POST:
+            if "avatar-clear" in request.POST:
                 form.avatar.delete()
-                form.avatar = User._meta.get_field('avatar').get_default()
+                form.avatar = User._meta.get_field("avatar").get_default()
 
             form.user = request.user
             form.save()
-            return redirect('profile')
+            return redirect("profile")
     else:
         form = UserEditForm(instance=request.user)
     return render(request, "registration/profile.html", {"form": form})
@@ -57,29 +58,57 @@ def groups(request):
     List all groups and subscribe or unsubscribe to groups.
     """
     groups = Group.objects.all()
-    return render(request, "groups.html", {"groups": groups})
+    subscribed_groups = Group.objects.filter(users=request.user)
+    return render(request, "groups.html", {"groups": groups, "subscribed_groups": subscribed_groups})
 
 
 def groups_user(request):
     """
-    List all groups that belong to the user.
+    List all groups that belong to the user, or the groups that they have subscribed to.
     """
     groups = Group.objects.filter(owner=request.user)
-    return render(request, "groups/groups_user.html", {"groups": groups})
+    subscribed_groups = Group.objects.filter(users=request.user)
+    return render(
+        request,
+        "groups/groups_user.html",
+        {"groups": groups, "subscribed_groups": subscribed_groups},
+    )
+
+
+def groups_subscribe(request, pk):
+    """
+    Users can subscribe to a group by clicking on the subscribe button.
+    If the user is not subscribed, a subscribe button should be shown,
+    and if the user is subscribed, an unsubscribe button should be shown.
+    """
+    group = Group.objects.get(pk=pk)
+    group.users.add(request.user)
+    return redirect("groups")
+
+
+def groups_unsubscribe(request, pk):
+    """
+    Users can unsubscribe from a group by clicking on the unsubscribe button.
+    """
+    group = Group.objects.get(pk=pk)
+    group.users.remove(request.user)
+    return redirect("groups")
 
 
 @login_required
 def groups_create(request):
     """
     Users can create and delete groups.
+    If they create a group, they are automatically subscribed to it.
     """
     if request.method == "POST":
         form = GroupCreateForm(request.POST, request.FILES)
         if form.is_valid():
-            group = form.save(commit=False)
-            group.owner_id = request.user.id
-            group.save()
-            return redirect("groups")
+            form = form.save(commit=False)
+            form.owner = request.user
+            form.save()
+            form.users.add(request.user)
+            return redirect("groups_user")
     else:
         form = GroupCreateForm()
     return render(request, "groups/groups_create.html", {"form": form})
@@ -95,9 +124,9 @@ def groups_edit(request, pk):
             form = form.save(commit=False)
 
             # Check if banner has been cleared
-            if 'banner-clear' in request.POST:
+            if "banner-clear" in request.POST:
                 form.banner.delete()
-                form.banner = Group._meta.get_field('banner').get_default()
+                form.banner = Group._meta.get_field("banner").get_default()
 
             form.save()
             return redirect("groups_edit", pk=pk)

@@ -4,5 +4,12 @@
 
 {% block content %}
     <h1>Groups</h1>
-    {% include "groups/group_card.html" %}
+    {% if groups %}
+        {% for group in groups %}
+            {% include "groups/group_card.html" %}
+        {% endfor %}
+    {% else %}
+        <p>There are no groups :(</p>
+        <a class="btn btn-outline-dark btn-sm" href="{% url "groups_create" %}">Create a group?</a>
+    {% endif %}
 {% endblock %}

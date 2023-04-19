@@ -1,8 +1,17 @@
 {% extends 'base.html' %}
 
-{% block title %}Groups{% endblock %}
+{% block title %}My Groups{% endblock %}
 
 {% block content %}
-    <h1>Groups</h1>
-    {% include "groups/group_card.html" %}
+    <div class="mt-2">
+        <h1 class="mb-2">My Groups</h1>
+        {% if subscribed_groups %}
+            {% for group in subscribed_groups %}
+                {% include "groups/group_card.html" %}
+            {% endfor %}
+        {% else %}
+            <p>There are no groups :(</p>
+            <a class="btn btn-outline-dark btn-sm" href="{% url "groups_create" %}">Create a group?</a>
+        {% endif %}
+    </div>
 {% endblock %}
