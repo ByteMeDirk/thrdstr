@@ -1,5 +1,3 @@
-image {
-    margin: inherit;
-    padding: inherit;
-    background-color: transparent !important;
+body {
+    background-color: #0a53be !important;
 }

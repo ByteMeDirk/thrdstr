@@ -3,11 +3,43 @@
 {% block title %}Groups{% endblock %}
 
 {% block content %}
-    <h1>Groups</h1>
     {% if groups %}
-        {% for group in groups %}
-            {% include "groups/group_card.html" %}
-        {% endfor %}
+        <div class="d-flex align-items-start">
+            <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                <button class="nav-link active" id="v-pills-recent-tab" data-bs-toggle="pill"
+                        data-bs-target="#v-pills-recent" type="button" role="tab" aria-controls="v-pills-recent"
+                        aria-selected="true">Recent Groups
+                </button>
+                <button class="nav-link" id="v-pills-all-tab" data-bs-toggle="pill" data-bs-target="#v-pills-all"
+                        type="button" role="tab" aria-controls="v-pills-all" aria-selected="false">All Groups
+                </button>
+            </div>
+            <div class="tab-content" id="v-pills-tabContent">
+                <div class="tab-pane fade show active" id="v-pills-recent" role="tabpanel"
+                     aria-labelledby="v-pills-recent-tab">
+                    <div class="row">
+                        {% for group in groups_last_week %}
+                            <div class="col-lg-6">
+                                <div class="item">
+                                    {% include "groups/group_card.html" %}
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="v-pills-all" role="tabpanel" aria-labelledby="v-pills-all-tab">
+                    <div class="row">
+                        {% for group in groups %}
+                            <div class="col-lg-6">
+                                <div class="item">
+                                    {% include "groups/group_card.html" %}
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
     {% else %}
         <p>There are no groups :(</p>
         <a class="btn btn-outline-dark btn-sm" href="{% url "groups_create" %}">Create a group?</a>

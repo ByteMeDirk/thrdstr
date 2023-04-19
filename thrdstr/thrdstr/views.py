@@ -1,3 +1,5 @@
+import datetime
+
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
@@ -59,7 +61,11 @@ def groups(request):
     """
     groups = Group.objects.all()
     subscribed_groups = Group.objects.filter(users=request.user)
-    return render(request, "groups.html", {"groups": groups, "subscribed_groups": subscribed_groups})
+
+    # list groups made within the last week
+    groups_last_week = Group.objects.filter(date_created__gte=datetime.datetime.now() - datetime.timedelta(days=7))
+
+    return render(request, "groups.html", {"groups": groups, "subscribed_groups": subscribed_groups, "groups_last_week": groups_last_week})
 
 
 def groups_user(request):
