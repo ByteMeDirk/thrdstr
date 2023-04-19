@@ -60,6 +60,14 @@ def groups(request):
     return render(request, "groups.html", {"groups": groups})
 
 
+def groups_user(request):
+    """
+    List all groups that belong to the user.
+    """
+    groups = Group.objects.filter(owner=request.user)
+    return render(request, "groups/groups_user.html", {"groups": groups})
+
+
 @login_required
 def groups_create(request):
     """
@@ -104,4 +112,4 @@ def groups_delete(request, pk):
     if request.method == "POST":
         group.delete()
 
-    return redirect("groups")
+    return redirect("groups_user")
