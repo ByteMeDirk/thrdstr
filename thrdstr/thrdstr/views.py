@@ -237,19 +237,15 @@ def post_delete(request, post_id, group_id):
 @login_required
 def post_like(request, post_id):
     """
-    Users can like posts, this makes use of AJAX to
+    Users can like or dislike posts, this makes use of AJAX to
     prevent the page from reloading.
     """
     post = Post.objects.get(pk=post_id)
-    post.likes.add(request.user)
-    return JsonResponse({"likes": post.likes.count()})
-
-
-@login_required
-def post_unlike(request, post_id):
-    """
-    Users can unlike posts.
-    """
-    post = Post.objects.get(pk=post_id)
-    post.likes.remove(request.user)
-    return JsonResponse({"likes": post.likes.count()})
+    user = request.user
+    if user in post.likes.all():
+        post.likes.remove(user)
+        liked = False
+    else:
+        post.likes.add(user)
+        liked = True
+    return JsonResponse({'liked': liked})

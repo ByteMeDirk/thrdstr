@@ -1,0 +1,80 @@
+<div class="btn-group" role="group" aria-label="Like/Dislike Post">
+    <button type="button" class="btn btn-sm btn-dark">
+        <span id="like-count-{{ post.id }}">Likes: {{ post.likes.count }}</span>
+    </button>
+    <button id="like-btn-{{ post.id }}" class="btn btn-sm btn-outline-dark like-btn" data-post-id="{{ post.id }}"
+            {% if request.user in post.likes.all %}disabled{% endif %}>
+        {% if request.user in post.likes.all %}<i class="bi bi-hand-thumbs-up-fill"></i>{% else %}
+            <i class="bi bi-hand-thumbs-up"></i>{% endif %}
+    </button>
+    <button id="dislike-btn-{{ post.id }}" class="btn btn-sm btn-outline-dark dislike-btn" data-post-id="{{ post.id }}"
+            {% if request.user not in post.likes.all %}disabled{% endif %}>
+        {% if request.user not in post.likes.all %}<i class="bi bi-hand-thumbs-down-fill"></i>{% else %}
+            <i class="bi bi-hand-thumbs-down"></i>{% endif %}
+    </button>
+</div>
+
+{% block scripts %}
+    <script type="text/javascript">
+        $(document).ready(function () {
+            // disable like and dislike buttons if user already liked or disliked
+            {% if user.is_authenticated %}
+                var likes = "{{ post.likes.all|make_list|join:', ' }}".split(", ");
+                if (likes.indexOf("{{ user.username }}") != -1) {
+                    $('#like-btn-{{ post.id }}').prop("disabled", true);
+                    $('#dislike-btn-{{ post.id }}').prop("disabled", false);
+                } else if (likes.indexOf("{{ user.username }}") == -1 && "{{ post.dislikes.all|make_list|join:', ' }}" == "") {
+                    $('#like-btn-{{ post.id }}').prop("disabled", false);
+                    $('#dislike-btn-{{ post.id }}').prop("disabled", false);
+                } else {
+                    $('#like-btn-{{ post.id }}').prop("disabled", false);
+                    $('#dislike-btn-{{ post.id }}').prop("disabled", true);
+                }
+            {% endif %}
+
+            $('#like-btn-{{ post.id }}').click(function () {
+                var likeCountSpan = $('#like-count-{{ post.id }}');
+                $.ajax({
+                    type: "POST",
+                    url: "{% url 'post_like' post.id %}",
+                    data: {
+                        'csrfmiddlewaretoken': '{{ csrf_token }}',
+                        'like': 'True'
+                    },
+                    success: function () {
+                        likeCountSpan.html("Likes: " + (parseInt(likeCountSpan.text().split(':')[1].trim()) + 1));
+                        $('#like-btn-{{ post.id }} i').removeClass('bi-hand-thumbs-up').addClass('bi-hand-thumbs-up-fill');
+                        $('#like-btn-{{ post.id }}').prop("disabled", true);
+                        $('#dislike-btn-{{ post.id }} i').removeClass('bi-hand-thumbs-down-fill').addClass('bi-hand-thumbs-down');
+                        $('#dislike-btn-{{ post.id }}').prop("disabled", false);
+                    },
+                    error: function (data) {
+                        console.log("error", data);
+                    }
+                });
+            });
+
+            $('#dislike-btn-{{ post.id }}').click(function () {
+                var likeCountSpan = $('#like-count-{{ post.id }}');
+                $.ajax({
+                    type: "POST",
+                    url: "{% url 'post_like' post.id %}",
+                    data: {
+                        'csrfmiddlewaretoken': '{{ csrf_token }}',
+                        'dislike': 'True'
+                    },
+                    success: function () {
+                        likeCountSpan.html("Likes: " + (parseInt(likeCountSpan.text().split(':')[1].trim()) - 1));
+                        $('#like-btn-{{ post.id }} i').removeClass('bi-hand-thumbs-up-fill').addClass('bi-hand-thumbs-up');
+                        $('#like-btn-{{ post.id }}').prop("disabled", false);
+                        $('#dislike-btn-{{ post.id }} i').removeClass('bi-hand-thumbs-down').addClass('bi-hand-thumbs-down-fill');
+                        $('#dislike-btn-{{ post.id }}').prop("disabled", true);
+                    },
+                    error: function (data) {
+                        console.log("error", data);
+                    }
+                });
+            });
+        });
+    </script>
+{% endblock %}

@@ -47,97 +47,15 @@
                 <div class="col-lg-6 col-md-6 overflow-scroll">
                     ...
                 </div>
-
             </div>
         </div>
     </div>
-
     <div class="card-footer">
-
-        <div class="btn-group" role="group" aria-label="Basic outlined example">
-            <button id="like-stat-{{ post.id }}" type="button" class="btn btn-sm btn-dark disabled">
-                Likes: {{ post.likes.count }}</button>
-            {# add styling to button if user has liked the post #}
-            <button id="like-button-{{ post.id }}" type="button" class="btn btn-sm btn-outline-dark "><i
-                    class="bi bi-hand-thumbs-up-fill"></i></button>
-            <button id="unlike-button-{{ post.id }}" type="button" class="btn btn-sm btn-outline-dark"><i
-                    class="bi bi-hand-thumbs-down-fill"></i></button>
-        </div>
-
-        <script>
-            const likeStat{{ post.id }} = {{ post.likes.count }};
-            $(document).ready(function () {
-                $('#like-button-{{ post.id }}').click(function () {
-                    $.ajax({
-                        url: '{% url "post_like" post_id=post.id %}',
-                        method: 'GET',
-                        success: function (response) {
-                            // Update the like count button's text with the new count
-                            var likeCount = parseInt(likeStat{{ post.id }} + 1);
-                            $('#like-stat-{{ post.id }}').text('Likes: ' + likeCount);
-
-                            // Update the data-container with the response data
-                            $('#data-container').html(response.data);
-                        }
-                    });
-                });
-
-                $('#unlike-button-{{ post.id }}').click(function () {
-                    $.ajax({
-                        url: '{% url "post_unlike" post_id=post.id %}',
-                        method: 'GET',
-                        success: function (response) {
-                            // Update the like count button's text with the new count
-                            var likeCount = parseInt(likeStat{{ post.id }} - 1);
-                            $('#like-stat-{{ post.id }}').text('Likes: ' + likeCount);
-
-                            // Update the data-container with the response data
-                            $('#data-container').html(response.data);
-                        }
-                    });
-                });
-            });
-        </script>
-
-
-        {# Users can delet and edit their own posts #}
-        {% if post.user == request.user %}
-            {# Button to Trigger Delete Group Modal #}
-            <a class="btn btn-sm btn-outline-danger" data-bs-toggle="modal"
-               data-bs-target="#deleteModal">
-                Delete
-            </a>
-            <a href="{% url 'post_edit' post_id=post.id group_id=group.id %}"
-               class="btn btn-outline-dark btn-sm">Edit
-            </a>
-        {% endif %}
+        {% include "widgets/post_like_unlike.html" %}
+        {% include "widgets/post_delete_edit.html" %}
     </div>
 </div>
 
-{# Delete Group Modal #}
-<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel"
-     aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="deleteModalLabel">Delete Thread?</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"
-                        aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                Are you sure you want to delete this thread? This action cannot be undone.
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                    Close
-                </button>
-                <form action="{% url 'post_delete' post_id=post.id group_id=group.id %}" method="POST">
-                    {% csrf_token %}
-                    <button type="submit" class="btn btn-danger">Delete</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
+
 
 

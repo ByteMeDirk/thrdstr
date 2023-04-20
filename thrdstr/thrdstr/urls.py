@@ -19,7 +19,6 @@ from .views import (
     post_delete,
     post_list,
     post_like,
-post_unlike
 )
 
 admin.autodiscover()
@@ -48,7 +47,6 @@ urlpatterns = [
     path("post/delete/<int:post_id>/<int:group_id>/", post_delete, name="post_delete"),
     path("post/list/<int:pk>/", post_list, name="post_list"),
     path("post/like/<int:post_id>/", post_like, name="post_like"),
-    path("post/unlike/<int:post_id>/", post_unlike, name="post_unlike"),
 ]
 
 if settings.DEBUG:
