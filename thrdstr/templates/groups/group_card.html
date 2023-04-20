@@ -13,7 +13,7 @@
             <div class="col-8">
                 <h5 class="card-title">{{ group.name }}</h5>
                 <p class="card-text">{{ group.description }}</p>
-                <a href="#" class="btn btn-sm btn-dark">Threads</a>
+                <a href="{% url "post_list" pk=group.id %}" class="btn btn-sm btn-dark">Threads</a>
 
                 {% if group.owner_id == user.id %}
                     <a href="{% url "groups_edit" group.id %}" class="btn btn-sm btn-outline-dark">Edit</a>
@@ -68,10 +68,7 @@
                             <button type="submit" class="btn btn-sm btn-outline-dark">Unsubscribe</button>
                         </form>
                     {% endif %}
-
                 {% endif %}
-
-
             </div>
         </div>
     </div>

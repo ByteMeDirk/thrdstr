@@ -14,6 +14,12 @@ from .views import (
     groups_delete,
     groups_subscribe,
     groups_unsubscribe,
+    post_create,
+    post_edit,
+    post_delete,
+    post_list,
+    post_like,
+post_unlike
 )
 
 admin.autodiscover()
@@ -36,6 +42,13 @@ urlpatterns = [
     path("groups/delete/<int:pk>/", groups_delete, name="groups_delete"),
     path("groups/subscribe/<int:pk>/", groups_subscribe, name="groups_subscribe"),
     path("groups/unsubscribe/<int:pk>/", groups_unsubscribe, name="groups_unsubscribe"),
+    # Post URLs
+    path("post/create/<int:pk>/", post_create, name="post_create"),
+    path("post/edit/<int:post_id>/<int:group_id>/", post_edit, name="post_edit"),
+    path("post/delete/<int:post_id>/<int:group_id>/", post_delete, name="post_delete"),
+    path("post/list/<int:pk>/", post_list, name="post_list"),
+    path("post/like/<int:post_id>/", post_like, name="post_like"),
+    path("post/unlike/<int:post_id>/", post_unlike, name="post_unlike"),
 ]
 
 if settings.DEBUG:

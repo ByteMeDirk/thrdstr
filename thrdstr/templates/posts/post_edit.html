@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+{% block title %}Edit Thread{% endblock %}
+
+{% block content %}
+    <div class="mask d-flex align-items-center h-100">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-xl-5 col-md-8">
+                    <form class="bg-white rounded p-5 shadow" method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <h1 class="h1">Edit Thread</h1>
+
+                        {% if form.errors %}
+                            <div class="alert alert-danger">
+                                {% for error in form.non_field_errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+
+                        {% for field in form %}
+                            {# Display image if field image, display file if field is file  #}
+                            {% if field.name == "image" %}
+                                <img  class="img-fluid mt-3" src="{{ form.instance.image.url }}">
+                            {% elif field.name == "file" %}
+                                {#  Show if file is a video #}
+                                {% if form.instance.file.url|slice:"-3:" in "mp4,mov,avi,wmv,flv,webm" %}
+                                    <video class="img-fluid mt-3" controls>
+                                        <source src="{{ form.instance.file.url }}" type="video/mp4">
+                                    </video>
+                                {% endif %}
+                            {% endif %}
+
+                            {# Display field as normal if not image or file #}
+                            <label for="{{ field.name }}" class="form-label">{{ field.label_tag }}</label>
+                            {{ field|add_class:"form-control" }}
+                        {% endfor %}
+
+                        <div class="mt-4">
+                            <button type="submit" class="btn btn-dark btn-block">Update</button>
+                            <button type="button" onclick="history.go(-1);" class="btn btn-outline-secondary btn-block">
+                                Cancel
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -45,3 +45,36 @@ class Group(models.Model):
         blank=True,
     )
     date_created = models.DateTimeField(default=datetime.datetime.now)
+
+    # return group name as string
+    def __str__(self):
+        return self.name
+
+
+class Post(models.Model):
+    """
+    Users can create a post in a group and other users can comment on it.
+    """
+
+    title = models.CharField(max_length=100, null=True, blank=True)
+    body = models.CharField(max_length=500, null=True, blank=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="post_user")
+    group = models.ForeignKey(
+        Group, on_delete=models.CASCADE, related_name="post_group"
+    )
+    image = models.ImageField(
+        upload_to="post_image",
+        null=True,
+        blank=True,
+    )
+    file = models.FileField(
+        upload_to="post_file",
+        null=True,
+        blank=True,
+    )
+    date_created = models.DateTimeField(default=datetime.datetime.now)
+    date_updated = models.DateTimeField(default=datetime.datetime.now)
+
+    # edited field is true if the post has been edited
+    edited = models.BooleanField(default=False)
+    likes = models.ManyToManyField(User, related_name="post_likes")

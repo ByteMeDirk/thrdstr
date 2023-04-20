@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 
-from .models import User, Group
+from .models import User, Group, Post
 
 
 # User Forms ------------------------------------------------------------------
@@ -64,3 +64,29 @@ class GroupEditForm(forms.ModelForm):
     class Meta:
         model = Group
         fields = ("banner", "description")
+
+
+# Post Forms ------------------------------------------------------------------
+class PostCreateForm(forms.ModelForm):
+    """
+    A form that allows a user to create a post.
+    """
+
+    body = forms.CharField(max_length=500, required=False)
+
+    class Meta:
+        model = Post
+        fields = ("title", "body", "image", "file")
+
+
+class PostEditForm(forms.ModelForm):
+    """
+    A form that allows a user to edit a post.
+    If the post has been edited, the edited field will be set to True.
+    """
+
+    body = forms.CharField(max_length=500, required=False)
+
+    class Meta:
+        model = Post
+        fields = ("title", "body", "image", "file")

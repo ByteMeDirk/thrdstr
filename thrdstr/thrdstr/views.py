@@ -1,12 +1,20 @@
 import datetime
 
 from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views.generic import CreateView
 
-from .forms import UserSignupForm, UserEditForm, GroupCreateForm, GroupEditForm
-from .models import Group, User
+from .forms import (
+    UserSignupForm,
+    UserEditForm,
+    GroupCreateForm,
+    GroupEditForm,
+    PostCreateForm,
+    PostEditForm,
+)
+from .models import Group, User, Post
 
 
 # Root Views    ---------------------------------------------------------------
@@ -63,9 +71,19 @@ def groups(request):
     subscribed_groups = Group.objects.filter(users=request.user)
 
     # list groups made within the last week
-    groups_last_week = Group.objects.filter(date_created__gte=datetime.datetime.now() - datetime.timedelta(days=7))
+    groups_last_week = Group.objects.filter(
+        date_created__gte=datetime.datetime.now() - datetime.timedelta(days=7)
+    )
 
-    return render(request, "groups.html", {"groups": groups, "subscribed_groups": subscribed_groups, "groups_last_week": groups_last_week})
+    return render(
+        request,
+        "groups.html",
+        {
+            "groups": groups,
+            "subscribed_groups": subscribed_groups,
+            "groups_last_week": groups_last_week,
+        },
+    )
 
 
 def groups_user(request):
@@ -148,3 +166,90 @@ def groups_delete(request, pk):
         group.delete()
 
     return redirect("groups_user")
+
+
+# Post Views    ---------------------------------------------------------------
+@login_required
+def post_list(request, pk):
+    """
+    Users can view all posts within a specific group that they belong to.
+    """
+    group = Group.objects.get(pk=pk)
+    posts = Post.objects.filter(group=group).order_by("-date_created")
+    return render(request, "posts/post_list.html", {"posts": posts, "group": group})
+
+
+@login_required
+def post_create(request, pk=None):
+    """
+    Users can create a post and select what group it belongs to.
+
+    If pk is not none, the form is pre-populated with the group that the user
+    wants to post to.
+    The user id is also added to the post.
+    """
+    if pk is not None:
+        group = Group.objects.get(pk=pk)
+    else:
+        group = None
+
+    if request.method == "POST":
+        form = PostCreateForm(request.POST, request.FILES)
+        if form.is_valid():
+            form = form.save(commit=False)
+            form.user = request.user
+            form.group = group
+            form.save()
+            return redirect("post_list", pk=pk)
+    else:
+        form = PostCreateForm()
+    return render(request, "posts/post_create.html", {"form": form, "group": group})
+
+
+@login_required
+def post_edit(request, post_id, group_id):
+    """
+    Users can edit their own posts.
+    """
+    post = Post.objects.get(pk=post_id)
+    if request.method == "POST":
+        form = PostEditForm(request.POST, request.FILES, instance=post)
+        if form.is_valid():
+            form = form.save(commit=False)
+            form.save()
+            return redirect("post_list", pk=group_id)
+    else:
+        form = PostEditForm(instance=post)
+    return render(request, "posts/post_edit.html", {"form": form})
+
+
+@login_required
+def post_delete(request, post_id, group_id):
+    """
+    Users can delete their own posts.
+    """
+    post = Post.objects.get(pk=post_id)
+    if request.method == "POST":
+        post.delete()
+    return redirect("post_list", pk=group_id)
+
+
+@login_required
+def post_like(request, post_id):
+    """
+    Users can like posts, this makes use of AJAX to
+    prevent the page from reloading.
+    """
+    post = Post.objects.get(pk=post_id)
+    post.likes.add(request.user)
+    return JsonResponse({"likes": post.likes.count()})
+
+
+@login_required
+def post_unlike(request, post_id):
+    """
+    Users can unlike posts.
+    """
+    post = Post.objects.get(pk=post_id)
+    post.likes.remove(request.user)
+    return JsonResponse({"likes": post.likes.count()})
